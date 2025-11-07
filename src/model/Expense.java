@@ -69,6 +69,6 @@ public class Expense
     @Override
     public String toString()
     {
-        return "Expense ID: " + id + "Description: " + name + "Amount: " + amount + "Time: " + dateOfExpense;
+        return "Expense ID: " + id + ", Description: " + name + ", Amount: " + amount + ", Time: " + dateOfExpense;
     }
 }

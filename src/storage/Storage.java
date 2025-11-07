@@ -94,7 +94,7 @@ public class Storage
     public void addExpense()
     {
         // === Expense Description ===
-        System.out.println("--------------------");
+        System.out.println("\n--------------------");
         System.out.print("Enter expense name: ");
         String name = keyboard.nextLine().trim();
         while(name.isEmpty())
@@ -115,7 +115,11 @@ public class Storage
                 String input = keyboard.nextLine().trim();
                 amount = Double.parseDouble(input);
             }
-            catch (InputMismatchException ex)
+            catch (NumberFormatException ex1)
+            {
+                System.out.println("Amount must be a number. Please try again.");
+            }
+            catch (InputMismatchException ex2)
             {
                 System.out.println("Please enter a valid number.");
                 keyboard.nextLine();
@@ -124,8 +128,8 @@ public class Storage
         while (amount <= 0);
 
         // === Expense Date ===
-        System.out.println("-------------------------------------------------------------------");
-        System.out.print("Enter the date of the expense (yyyy-mm-dd) or leave empty for none: ");
+        System.out.println("-------------------------------------------------------------------------------");
+        System.out.print("Enter the date of the expense (yyyy-mm-dd) or leave empty to default to today: ");
         String dateOfExpenseInput = keyboard.nextLine().trim();
 
         LocalDate dateOfExpense;
@@ -150,7 +154,7 @@ public class Storage
         Expense tmp = new Expense(name, amount, dateOfExpense);
         expenses.add(tmp);
         System.out.println("\n--------------------------");
-        System.out.println("Expense added successfully " + tmp.getId());
+        System.out.println("Expense added successfully (" + tmp.getId() + ").");
         saveExpenses();
 
         Pause();
@@ -163,7 +167,7 @@ public class Storage
     public void updateExpense()
     {
         System.out.println("\n\n    Update Expenses.");
-        System.out.println("===================================\n");
+        System.out.println("==============================");
 
         int i = 1;
         for (Expense expense: expenses)
@@ -183,26 +187,24 @@ public class Storage
 
         do
         {
-            System.out.print("Enter the number of the expense you want to update (or enter 0 to cancel): ");
+            System.out.print("\nEnter the number of the expense you want to update (or enter 0 to cancel): ");
 
             try
             {
                 String userInputIndex = keyboard.nextLine().trim();
                 expenseIndex = Integer.parseInt(userInputIndex);
-                //expenseIndex = keyboard.nextInt(); //
-                //keyboard.nextLine(); // clears buffer
+
                 if (expenseIndex == 0)
                     return;
                 expenseIndex--;
                 if (expenseIndex >= 0 && expenseIndex < expenses.size())
                     validInput = true;
                 else
-                    System.out.println("\nInvalid choice. Please try again.");
+                    System.out.println("\nInvalid choice. Please enter a number of an existing expense.");
             }
-            catch (InputMismatchException ex)
+            catch (NumberFormatException ex)
             {
                 System.out.println("\nInvalid choice. Please enter a number.");
-                keyboard.nextLine(); // this consumes the wrong input
             }
         }
         while (!validInput);
@@ -213,15 +215,15 @@ public class Storage
         // View details of the selected expense
         viewExpenseDetails(tmp);
 
-        System.out.println("\nAre you sure you want to edit this expense? [Y/N]");
+        System.out.print("\nAre you sure you want to edit this expense? [Y/N]: ");
         String editChoice = keyboard.nextLine().trim();
         if (editChoice.equals("Y") || editChoice.equals("y"))
         {
             updateExpenseData(tmp);
-            System.out.println("The expense was updated successfully.");
+            System.out.println("\nThe expense was updated successfully.");
         }
         else
-            System.out.println("Updating was canceled.");
+            System.out.println("\nUpdating was canceled.");
 
         Pause();
     }
@@ -233,10 +235,10 @@ public class Storage
      */
     public boolean updateExpenseData(Expense editing)
     {
-        System.out.println("\nTo keep the current value simply press Enter.");
+        System.out.println("\nTo keep the current value simply press Enter.\n");
 
         // === Update Description ===
-        System.out.println("New description (" + editing.getName() + "): ");
+        System.out.print("New description (" + editing.getName() + "): ");
         String newDescription = keyboard.nextLine().trim();
         if (!newDescription.isBlank())
             editing.setName(newDescription);
@@ -247,7 +249,7 @@ public class Storage
         {
             try
             {
-                System.out.println("New amount (" + editing.getAmount() + "): ");
+                System.out.print("New amount (" + editing.getAmount() + "): ");
                 String newAmount = keyboard.nextLine().trim();
                 if (newAmount.isEmpty())
                 {
@@ -268,7 +270,7 @@ public class Storage
         while (!validInput);
 
         // === Update Date ===
-        System.out.println("New date (" + editing.getDateOfExpense() + "): ");
+        System.out.print("New date (" + editing.getDateOfExpense() + "): ");
         String newDateInput = keyboard.nextLine().trim();
 
         if (!newDateInput.isEmpty())
@@ -280,7 +282,7 @@ public class Storage
             }
             catch (DateTimeParseException ex)
             {
-                System.out.println("Invalid date format. Keeping previous date.");
+                System.out.println("\nInvalid date format. Keeping previous date.");
             }
         }
 
@@ -305,15 +307,15 @@ public class Storage
         int choice = -1;
         do
         {
-            System.out.println("/nSelect the number of the expense you want to delete");
-            System.out.println("==================================================================");
+            System.out.println("\nSelect the number of the expense you want to delete");
+            System.out.println("=========================================================================");
             for (int i = 0; i < expenses.size(); i++)
             {
                 System.out.println((i + 1) + ". " + expenses.get(i));
             }
 
-            System.out.println("===================================================================");
-            System.out.print("Enter the number of the expense you want to delete: ");
+            System.out.println("==========================================================================");
+            System.out.print("\nEnter the number of the expense you want to delete: ");
             String input = keyboard.nextLine().trim();
 
             try
@@ -322,7 +324,7 @@ public class Storage
                 if (choice > 0 && choice <= expenses.size())
                 {
                     expenses.remove(choice -1);
-                    System.out.println("Expense deleted successfully!");
+                    System.out.println("\nExpense deleted successfully!");
                     saveExpenses();
                 }
                 else
@@ -370,11 +372,11 @@ public class Storage
     public void viewExpenseDetails(Expense expense)
     {
         System.out.println("\n  EXPENSE INFO");
-        System.out.println("==================");
+        System.out.println("====================");
         System.out.println("Expense ID.........: " + expense.getId());
         System.out.println("Description........: " + expense.getName());
         System.out.println("Amount.............: " + expense.getAmount());
-        System.out.println("Time...............: " + expense.getDateOfExpense());
+        System.out.println("Date...............: " + expense.getDateOfExpense());
     }
 
     /**
@@ -390,7 +392,7 @@ public class Storage
 
         if (expenses.isEmpty())
         {
-            System.out.println("No expenses recorded.");
+            System.out.println("\nNo expenses recorded.");
             return;
         }
 
@@ -400,9 +402,9 @@ public class Storage
             totalCounter++;
         }
 
-        System.out.println("Summary of Expenses");
+        System.out.println("\nSummary of Expenses");
         System.out.println("=====================");
-        System.out.println("\nTotal expenses: " + totalCounter);
+        System.out.println("Total expenses: " + totalCounter);
         System.out.println("Total amount: $" + totalAmount);
 
         Pause();
@@ -423,13 +425,13 @@ public class Storage
         int counter = 0;
         double totalAmount = 0.0;
 
-        System.out.println("Expenses by Month");
+        System.out.println("\nExpenses by Month");
         System.out.println("=================");
 
-        int monthChosen;
+        int monthChosen = 0;
         do
         {
-            System.out.print("\nSelect the month for which you want to see the total expenses(1 - 12): ");
+            System.out.print("\nSelect the month for which you want to see the total expenses (1 - 12): ");
             String input = keyboard.nextLine().trim();
 
             try
@@ -449,13 +451,12 @@ public class Storage
                 }
                 else
                 {
-                    System.out.println("\nInvalid month number. Please enter between 1 and 12.");
+                    System.out.println("\nInvalid month number. Please enter a number between 1 and 12.");
                 }
             }
             catch (NumberFormatException ex)
             {
-                System.out.println("Invalid input. Please enter a number between 1 and 12.");
-                return;
+                System.out.println("\nInvalid input. Please enter a number between 1 and 12.");
             }
         }
         while (monthChosen < 1 || monthChosen > 12);
