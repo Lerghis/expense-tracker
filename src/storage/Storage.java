@@ -220,6 +220,7 @@ public class Storage
         if (editChoice.equals("Y") || editChoice.equals("y"))
         {
             updateExpenseData(tmp);
+            saveExpenses();
             System.out.println("\nThe expense was updated successfully.");
         }
         else
