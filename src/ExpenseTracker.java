@@ -28,6 +28,7 @@ public class ExpenseTracker
             System.out.println("[4].......View Expenses");
             System.out.println("[5].......View Summary of Expenses");
             System.out.println("[6].......View Summary of Expenses for a Specific Month");
+            System.out.println("[7].......Filter Expenses by Category");
             System.out.println("[9].......Exit App");
             System.out.print("\nEnter your choice: ");
             choice = keyboard.nextInt();
@@ -41,6 +42,7 @@ public class ExpenseTracker
                 case 4 -> storage.viewExpenses();
                 case 5 -> storage.viewExpenseSummary();
                 case 6 -> storage.viewExpenseSummaryForSpecificMonth();
+                case 7 -> storage.viewExpensesByCategory();
                 case 9 -> System.out.println("Exiting...");
                 default -> System.out.println("Invalid choice!");
             }

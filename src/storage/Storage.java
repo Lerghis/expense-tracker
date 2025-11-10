@@ -150,8 +150,19 @@ public class Storage
             }
         }
 
+        // === Expense Category ===
+        System.out.println("-----------------------");
+        System.out.print("Enter expense category: ");
+        String category = keyboard.nextLine().trim();
+        while(category.isEmpty())
+        {
+            System.out.println("Category cannot be empty.");
+            System.out.print("Enter again: ");
+            category = keyboard.nextLine().trim();
+        }
+
         // === Create Expense ===
-        Expense tmp = new Expense(name, amount, dateOfExpense);
+        Expense tmp = new Expense(name, amount, dateOfExpense, category);
         expenses.add(tmp);
         System.out.println("\n--------------------------");
         System.out.println("Expense added successfully (" + tmp.getId() + ").");
@@ -470,6 +481,42 @@ public class Storage
         Pause();
     }
 
+    public void viewExpensesByCategory()
+    {
+        int totalCounter = 0;
+        double totalAmount = 0;
+
+        System.out.println("\n------------------------------");
+        System.out.print("Enter category to filter by: ");
+        String category = keyboard.nextLine().trim();
+
+        System.out.println("\nExpenses in category: " + category);
+        System.out.println("==================================");
+
+        for (Expense expense: expenses)
+        {
+            if (expense.getCategory().equalsIgnoreCase(category))
+            {
+                totalAmount += expense.getAmount();
+                totalCounter++;
+                System.out.println(expense);
+            }
+        }
+
+        if (totalCounter == 0)
+        {
+            System.out.println("No expenses found for category " + category);
+            return;
+        }
+
+        System.out.println("\nExpense summary for category " + category);
+        System.out.println("==================================");
+        System.out.println("Total expenses: " + totalCounter);
+        System.out.println("Total amount: $" + totalAmount);
+
+        Pause();
+    }
+
     /**
      * Saves all expenses from memory to the task CSV file.
      *
@@ -521,6 +568,7 @@ public class Storage
         String description;
         double amount;
         LocalDate date;
+        String category;
         Expense newExpense; // Expense object to be created from each line
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file)))
@@ -528,7 +576,7 @@ public class Storage
             while ((line = reader.readLine()) != null)
             {
                 parts = line.split(","); // separation of line data based on ","
-                if (parts.length < 4)
+                if (parts.length < 5)
                 {
                     System.out.println("Skipping invalid line: " + line);
                     continue;
@@ -538,8 +586,9 @@ public class Storage
                 description = parts[1].trim();
                 amount = Double.parseDouble(parts[2].trim());
                 date = LocalDate.parse(parts[3].trim());
+                category = parts[4].trim();
 
-                newExpense = new Expense(id, description, amount, date); // New expense creation
+                newExpense = new Expense(id, description, amount, date, category); // New expense creation
                 expenses.add(newExpense);
             }
         }

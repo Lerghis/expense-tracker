@@ -9,23 +9,26 @@ public class Expense
     private String name;
     private double amount;
     private LocalDate dateOfExpense;
+    private String category;
 
     // Constructor that auto-generates ID
-    public Expense(String name, double amount, LocalDate dateOfExpense)
+    public Expense(String name, double amount, LocalDate dateOfExpense, String category)
     {
         this.id = nextId++;
         this.name = name;
         this.amount = amount;
         this.dateOfExpense = dateOfExpense;
+        this.category = category;
     }
 
     // Constructor for loading existing expenses (ensures existing expenses keep their original IDs)
-    public Expense(int id, String name, double amount, LocalDate dateOfExpense)
+    public Expense(int id, String name, double amount, LocalDate dateOfExpense, String category)
     {
         this.id = id;
         this.name = name;
         this.amount = amount;
         this.dateOfExpense = dateOfExpense;
+        this.category = category;
 
         // This part keeps the automatic ID counter in sync with the highest ID already used to avoid duplicates.
         if (id >= nextId)
@@ -62,13 +65,21 @@ public class Expense
         this.dateOfExpense = dateOfExpense;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     public String AsCsvLine()
     {
-        return id + "," + name + "," + amount + "," + dateOfExpense;
+        return id + "," + name + "," + amount + "," + dateOfExpense + "," + category;
     }
     @Override
     public String toString()
     {
-        return "Expense ID: " + id + ", Description: " + name + ", Amount: " + amount + ", Time: " + dateOfExpense;
+        return "Expense ID: " + id + ", Description: " + name + ", Amount: " + "$" + amount + ", Time: " + dateOfExpense + ", Category: " + category;
     }
 }
