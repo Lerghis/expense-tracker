@@ -550,6 +550,13 @@ public class Storage
         Pause();
     }
 
+    /**
+     * Prompts the user to set the monthly budget via console input.
+     * <p>
+     * Validates that the input is a positive number. The method loops until a valid
+     * budget is entered. Once set, the budget is saved to the CSV file by calling {@link #saveBudget()}.
+     * Execution pauses after setting the budget to allow the user to view confirmation.
+     */
     public void setMonthlyBudget()
     {
         do
@@ -573,6 +580,13 @@ public class Storage
         Pause();
     }
 
+    /**
+     * Displays the current budget status for the user.
+     * <p>
+     * Prints the total budget, total spent, and the difference. If the total spent
+     * exceeds the budget, a warning message is displayed. Execution pauses after
+     * displaying the status for user readability.
+     */
     public void viewBudgetStatus()
     {
         System.out.println("\n----------------------------");
@@ -679,6 +693,13 @@ public class Storage
         System.out.println("Data read successfully. Total expenses: " + expenses.size());
     }
 
+    /**
+     * Saves the current monthly budget to the CSV file defined by {@code budget}.
+     * <p>
+     * The method overwrites any existing value in the file with the current value
+     * of {@code monthlyBudget}. If the file cannot be opened or written, an
+     * appropriate message is displayed and the stack trace is printed for I/O errors.
+     */
     public void saveBudget()
     {
         File file = new File(dirPath, budget);
@@ -698,6 +719,13 @@ public class Storage
         }
     }
 
+    /**
+     * Loads the monthly budget from the CSV file defined by {@code budget}.
+     * <p>
+     * If the file exists, the first line is read and parsed to a double value,
+     * which is then assigned to {@code monthlyBudget}. If the file is missing,
+     * empty, or contains invalid data, the budget defaults to 0 and a message is displayed.
+     */
     public void loadBudget()
     {
         File file = new File (dirPath, budget);
