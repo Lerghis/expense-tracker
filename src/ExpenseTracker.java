@@ -29,7 +29,9 @@ public class ExpenseTracker
             System.out.println("[5].......View Summary of Expenses");
             System.out.println("[6].......View Summary of Expenses for a Specific Month");
             System.out.println("[7].......Filter Expenses by Category");
-            System.out.println("[9].......Exit App");
+            System.out.println("[8].......Set Monthly Budget");
+            System.out.println("[9].......View Budget Status");
+            System.out.println("[0].......Exit App");
             System.out.print("\nEnter your choice: ");
             choice = keyboard.nextInt();
             keyboard.nextLine(); // Clear Buffer
@@ -43,17 +45,20 @@ public class ExpenseTracker
                 case 5 -> storage.viewExpenseSummary();
                 case 6 -> storage.viewExpenseSummaryForSpecificMonth();
                 case 7 -> storage.viewExpensesByCategory();
-                case 9 -> System.out.println("Exiting...");
+                case 8 -> storage.setMonthlyBudget();
+                case 9 -> storage.viewBudgetStatus();
+                case 0 -> System.out.println("Exiting...");
                 default -> System.out.println("Invalid choice!");
             }
         }
-        while(choice != 9);
+        while(choice != 0);
     }
 
     // Calling Save methods to save the data
     public void FinalJobs()
     {
         storage.saveExpenses();
+        storage.saveBudget();
     }
     public static void main(String[] args)
     {

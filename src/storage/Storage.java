@@ -15,7 +15,10 @@ public class Storage
 {
     final String dirPath = "csv_data";
     final String expenseList = "expenses.csv";
+    final String budget = "budget.csv";
     private final List<Expense> expenses;
+    private double monthlyBudget = 0;
+    private double totalSpent = 0;
     Scanner keyboard;
 
     /**
@@ -29,6 +32,7 @@ public class Storage
         createDataDirectory();
         createExpenseFile();
         loadExpenses();
+        loadBudget();
     }
 
     /**
@@ -75,7 +79,30 @@ public class Storage
         }
         catch (IOException ex)
         {
-            System.out.println("An error has occured while creating the File.");
+            System.out.println("An error has occurred while creating the File.");
+            ex.printStackTrace();
+        }
+    }
+
+    public void createBudgetFile()
+    {
+        try
+        {
+            File obj = new File(dirPath, budget);
+
+            // creating the file
+            if (obj.createNewFile())
+            {
+                System.out.println("File created: " + obj.getAbsolutePath());
+            }
+            else
+            {
+                System.out.println("File already exists: " + obj.getAbsolutePath());
+            }
+        }
+        catch (IOException ex)
+        {
+            System.out.println("An error has occurred while creating the File.");
             ex.printStackTrace();
         }
     }
@@ -164,6 +191,12 @@ public class Storage
         // === Create Expense ===
         Expense tmp = new Expense(name, amount, dateOfExpense, category);
         expenses.add(tmp);
+        totalSpent += tmp.getAmount();
+
+        if (monthlyBudget > 0 && totalSpent > monthlyBudget)
+        {
+            System.out.println("Warning! You have exceeded your monthly budget!");
+        }
         System.out.println("\n--------------------------");
         System.out.println("Expense added successfully (" + tmp.getId() + ").");
         saveExpenses();
@@ -517,6 +550,45 @@ public class Storage
         Pause();
     }
 
+    public void setMonthlyBudget()
+    {
+        do
+        {
+            try
+            {
+                System.out.print("\nEnter monthly budget amount: ");
+                String input = keyboard.nextLine().trim();
+                monthlyBudget = Double.parseDouble(input);
+            }
+            catch (NumberFormatException ex)
+            {
+                System.out.println("\nBudget must be a number. Please try again.");
+            }
+        }
+        while (monthlyBudget <= 0);
+
+        System.out.println("\nMonthly budget was set to $" + monthlyBudget);
+        saveBudget();
+
+        Pause();
+    }
+
+    public void viewBudgetStatus()
+    {
+        System.out.println("\n----------------------------");
+        System.out.println("Budget: " + monthlyBudget);
+        System.out.println("Total spent: " + totalSpent);
+
+        if (totalSpent > monthlyBudget)
+            System.out.println("You are over budget by " + (totalSpent - monthlyBudget));
+        else
+            System.out.println("You have " + (monthlyBudget - totalSpent) + " remaining.");
+
+        System.out.println("----------------------------");
+
+        Pause();
+    }
+
     /**
      * Saves all expenses from memory to the task CSV file.
      *
@@ -605,6 +677,60 @@ public class Storage
         }
 
         System.out.println("Data read successfully. Total expenses: " + expenses.size());
+    }
+
+    public void saveBudget()
+    {
+        File file = new File(dirPath, budget);
+
+        try(PrintWriter writer = new PrintWriter(new FileWriter(file, false)))
+        {
+            writer.println(monthlyBudget);
+        }
+        catch (FileNotFoundException ex)
+        {
+            System.out.println("Cannot open budget file. Not found.");
+        }
+        catch (IOException ex)
+        {
+            System.out.println("IO Error while saving budget data.");
+            ex.printStackTrace();
+        }
+    }
+
+    public void loadBudget()
+    {
+        File file = new File (dirPath, budget);
+        String line; // Variable for reading each line from the file
+
+        if (file.exists())
+        {
+            try (BufferedReader reader = new BufferedReader(new FileReader(file)))
+            {
+                line = reader.readLine();
+                if (line != null && !line.isEmpty())
+                {
+                    monthlyBudget = Double.parseDouble(line);
+                }
+            }
+            catch (FileNotFoundException ex)
+            {
+                System.out.println("Budget file not found.");
+                return;
+            }
+            catch (IOException ex)
+            {
+                System.out.println("Error reading budget file.");
+                ex.printStackTrace();
+                //return;
+            }
+            catch (NumberFormatException ex)
+            {
+                System.out.println("Invalid budget value in file. Using default 0.");
+            }
+        }
+
+        System.out.println("Data read successfully. Budget file found.");
     }
 
     /**
