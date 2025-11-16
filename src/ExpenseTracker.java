@@ -60,6 +60,13 @@ public class ExpenseTracker
         storage.saveExpenses();
         storage.saveBudget();
     }
+
+    /**
+     * Entry point of the program.
+     * Starts the application by calling the Menu() method.
+     *
+     * @param args command-line arguments (not used)
+     */
     public static void main(String[] args)
     {
         ExpenseTracker Program = new ExpenseTracker();

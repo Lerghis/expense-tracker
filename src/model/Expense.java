@@ -73,10 +73,26 @@ public class Expense
         this.category = category;
     }
 
+    /**
+     * Converts an expense into a CSV-formatted line.
+     * <p>
+     * The returned string contains the expense fields separated by commas,
+     * ordered as: id, name, amount, dateOfExpense, category.
+     *
+     * @return a CSV representation of the expense
+     */
     public String AsCsvLine()
     {
         return id + "," + name + "," + amount + "," + dateOfExpense + "," + category;
     }
+
+    /**
+     * Returns a human-readable string representation of the expense.
+     * <p>
+     * Includes id, description, amount, date, and category in a formatted line.
+     *
+     * @return a formatted string describing the expense
+     */
     @Override
     public String toString()
     {

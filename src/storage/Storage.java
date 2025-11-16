@@ -22,7 +22,9 @@ public class Storage
     Scanner keyboard;
 
     /**
-     * The constructor of this class, it is used to initialize the expenses list
+     * Initializes the Storage system by setting up internal data structures,
+     * preparing input handling, creating required directories and files, and
+     * loading existing expense and budget data from disk.
      */
     public Storage()
     {
@@ -31,6 +33,7 @@ public class Storage
 
         createDataDirectory();
         createExpenseFile();
+        createBudgetFile();
         loadExpenses();
         loadBudget();
     }
@@ -84,6 +87,13 @@ public class Storage
         }
     }
 
+    /**
+     * Creates the budget CSV file if it does not already exist.
+     * <p>
+     * Attempts to create the file inside the directory specified by {@code dirPath}.
+     * Prints a message indicating whether the file was created or already present.
+     * Any I/O errors during creation are reported to the user.
+     */
     public void createBudgetFile()
     {
         try
@@ -110,11 +120,11 @@ public class Storage
     /**
      * Adds a new expense to the list.
      * This method interacts with the user via the console to:
-     *
+     * <p>
      *  Enter a non-empty expense description
      *  Enter a valid expense amount
      *  Optionally provide a date for when the expense occur
-     *
+     * <p>
      * After collecting input, an Expense object is created, added to the
      * internal list, expenses id number is generated automatically.
      */
@@ -336,7 +346,7 @@ public class Storage
 
     /**
      * Deletes an expense from the list by user selection.
-     *
+     * <p>
      * Prompts the user to choose an expense number, validates the input, and then
      * deletes the corresponding expense. After deletion, the updated list is saved
      * back to the file system. If the input is invalid, the user is asked again.
@@ -390,7 +400,7 @@ public class Storage
 
     /**
      * Displays all expenses currently stored in memory.
-     *
+     * <p>
      * The method prints a formatted list of expenses along with their index.
      * If there are no expenses, it informs the user. Execution pauses after displaying.
      */
@@ -414,6 +424,14 @@ public class Storage
         Pause();
     }
 
+    /**
+     * Displays formatted information about a single expense.
+     * <p>
+     * Prints the ID, description, amount, and date of the provided {@code expense}.
+     * This method is for user-facing detailed inspection of an individual expense record.
+     *
+     * @param expense the expense whose details will be displayed
+     */
     public void viewExpenseDetails(Expense expense)
     {
         System.out.println("\n  EXPENSE INFO");
@@ -514,6 +532,14 @@ public class Storage
         Pause();
     }
 
+    /**
+     * Displays all expenses that match a user-selected category and prints a
+     * summary of the total count and total amount for that category.
+     * <p>
+     * Prompts the user for a category, scans all stored expenses, prints each
+     * matching expense, and then shows the computed totals. If no expenses match,
+     * an informative message is displayed instead.
+     */
     public void viewExpensesByCategory()
     {
         int totalCounter = 0;
@@ -605,7 +631,7 @@ public class Storage
 
     /**
      * Saves all expenses from memory to the task CSV file.
-     *
+     * <p>
      * Each expense is serialized into a single CSV line using
      * {Expense.AsCsvLine()}. Existing file contents are overwritten.
      * If the file cannot be found or written, an error message is displayed.
@@ -634,14 +660,14 @@ public class Storage
 
     /**
      * Loads expenses from the expense CSV file into memory.
-     * Reads each line of the file and attempts to parse it into a {@link Expense}.
+     * Reads each line of the file and attempts to parse it into an {@link Expense}.
      * Parsing includes safe handling of:
-     *
+     * <p>
      *   ID
      *   Description
      *   Amount
      *   Date
-     *
+     * <p>
      * Invalid lines are skipped with a warning. After loading, the total number
      * of expenses read is displayed.
      */
@@ -763,7 +789,7 @@ public class Storage
 
     /**
      * Pauses program execution until the user presses Enter.
-     *
+     * <p>
      * This method is intended for console-based interaction only and is skipped
      * in GUI mode. It ensures the user has time to read console output before
      * proceeding.
