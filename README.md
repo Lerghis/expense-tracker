@@ -1,5 +1,5 @@
 # expense-tracker
-A console-based [expense-tracker](https://github.com/Lerghis/expense_tracker) Java application for recording, managing, and analyzing personal expenses. 
+A console-based [expense-tracker](https://roadmap.sh/projects/expense-tracker) Java application for recording, managing, and analyzing personal expenses. 
 The project demonstrates practical data persistence, robust input handling, simple reporting features, and CSV-based storage without external 
 libraries.
 
